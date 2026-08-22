@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0d0f12">
+<title>FDR & DPS Calculator - Dutch-Bangla Bank PLC</title>
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --red: #dc2626;
+  --green: #16a34a;
+  --yellow: #eab308;
+  --bg: #0d0f12;
+  --card: #14171d;
+  --card-border: #222731;
+  --input-bg: #090a0d;
+  --text: #ffffff;
+  --muted: #8b95a5;
+  --border: #2a303c;
+  --success: #4ade80;
+  --rose: #f43f5e;
+}
+
+/* Light Theme Variables */
+body.light-theme {
+  --bg: #f3f4f6;
+  --card: #ffffff;
+  --card-border: #e5e7eb;
+  --input-bg: #f9fafb;
+  --text: #111827;
+  --muted: #4b5563;
+  --border: #d1d5db;
+  --success: #16a34a;
+  --rose: #e11d48;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text);
+  padding: 20px 12px;
+  line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.container { max-width: 980px; margin: auto; padding: 0; }
+
+/* Dedicated Bank Branding Box */
+.box-bank-header {
+  position: relative;
+  overflow: hidden;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 24px 24px 16px 24px;
+  margin-bottom: 16px;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 8px 24px rgba(0,0,0,.1);
+}
+.brand {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+.brand-container {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: center;
+}
+.brand-name {
+  font-weight: 900;
+  font-size: 32px;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  color: var(--text);
+  text-transform: uppercase;
+}
+.brand-subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: right;
+  margin-top: 2px;
+}
+.brand-divider {
+  display: flex;
+  height: 8px;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.brand-divider .b1 { flex: 1; background-color: var(--primary); }
+.brand-divider .b2 { flex: 1; background-color: var(--red); }
+.brand-divider .b3 { flex: 1; background-color: var(--green); }
+
+/* Sales & Service Officers' Assistance Box */
+.box-assistance {
+  background: radial-gradient(circle at 50% 20%, var(--card) 0%, var(--bg) 80%);
+  border: 1px solid #881337;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border-radius: 14px;
+  padding: 18px 24px;
+  margin-bottom: 16px;
+  text-align: center;
+  container-type: inline-size;
+}
+.assistance-title {
+  font-size: clamp(13px, 3.8cqi, 20px);
+  font-weight: 900;
+  color: #0284c7;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+body:not(.light-theme) .assistance-title {
+  color: #38bdf8;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+.assistance-sub {
+  font-size: clamp(12px, 3.5cqi, 15px);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #d97706 0%, #ca8a04 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+body:not(.light-theme) .assistance-sub {
+  background: linear-gradient(180deg, #ffffff 0%, #fef08a 40%, #eab308 75%, #ca8a04 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+}
+
+/* Navigation Toolbar Row */
+.box-navigation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+.tab-btn {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.tab-btn:hover {
+  background: var(--input-bg);
+  color: var(--text);
+}
+.tab-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+}
+
+.theme-toggle-btn {
+  grid-column: span 1;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+.theme-toggle-btn:hover {
+  background: var(--input-bg);
+}
+
+.settings-toggle-btn {
+  grid-column: span 1;
+  width: 100%;
+  background: rgba(220, 38, 38, 0.15);
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.4);
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+body:not(.light-theme) .settings-toggle-btn {
+  color: #fca5a5;
+}
+.settings-toggle-btn:hover {
+  background: rgba(220, 38, 38, 0.25);
+  transform: translateY(-1px);
+}
+.settings-toggle-btn .gear-icon {
+  font-size: 14px;
+  transition: transform 0.4s ease;
+}
+.settings-toggle-btn:hover .gear-icon {
+  transform: rotate(90deg);
+}
+
+/* Calculator Title & Description Box */
+.box-brand {
+  position: relative;
+  overflow: hidden;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 8px 24px rgba(0,0,0,.05);
+}
+.box-brand h1 {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--primary);
+  line-height: 1.2;
+  text-align: center;
+}
+body:not(.light-theme) .box-brand h1 {
+  color: #60a5fa;
+}
+.box-brand p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: justify;
+  line-height: 1.6;
+}
+.version-tag {
+  text-align: right;
+  font-size: 10px;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 10px;
+  letter-spacing: 0.5px;
+}
+
+/* Common Card & Form Controls */
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+h2 {
+  font-size: 15px;
+  margin: 0 0 16px;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+body:not(.light-theme) h2 { color: #60a5fa; }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.horizon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+input, select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 15px;
+  background: var(--input-bg);
+  color: var(--text);
+  outline: none;
+  transition: all .2s ease;
+}
+input::placeholder {
+  color: var(--muted);
+  font-weight: 400;
+}
+input:focus, select:focus { 
+  border-color: var(--primary); 
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+.in-words {
+  font-size: 12px;
+  color: var(--primary);
+  margin-top: 6px;
+  font-weight: 500;
+  min-height: 18px;
+  font-style: italic;
+}
+body:not(.light-theme) .in-words { color: #60a5fa; }
+
+/* Plan Selectors */
+.plan-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.plan {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  cursor: pointer;
+  text-align: center;
+  background: var(--input-bg);
+  transition: all .2s;
+}
+.plan:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+.plan.active {
+  border-color: var(--primary);
+  background: rgba(37,99,235,0.12);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+.plan strong { display: block; font-size: 16px; color: var(--text); }
+.plan span { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+/* Radio Buttons */
+.radio-row { display: flex; flex-direction: column; gap: 10px; }
+.radio {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: border-color 0.2s;
+}
+.radio:hover { border-color: var(--primary); }
+.radio input { width: auto; margin-right: 12px; accent-color: var(--primary); }
+
+/* Custom Action Buttons */
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.actions { 
+  display: flex; 
+  gap: 12px; 
+  margin-top: 18px; 
+  width: 100%;
+}
+.btn-calc {
+  flex: 2.5;
+  background: var(--primary); 
+  color: #fff;
+  padding: 14px 24px;
+  font-size: 15px;
+}
+.btn-calc:hover { background: var(--primary-hover); transform: translateY(-1px); }
+.btn-reset {
+  flex: 0.8;
+  background: var(--border); 
+  color: var(--text);
+  padding: 14px 12px;
+  font-size: 13px;
+}
+.btn-reset:hover { filter: brightness(0.9); }
+
+.danger { background: #991b1b; color: #fff; }
+.danger:hover { background: #dc2626; }
+
+/* Sub-Card Section Layout for FDR Summary */
+.summary-group {
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.summary-group:last-child {
+  margin-bottom: 0;
+}
+.summary-group-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Single-Line Property Grid Layouts */
+.property-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.property-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.prop-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--input-bg);
+  border: 1px solid var(--card-border);
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+.prop-item.highlight {
+  background: rgba(22,163,74,0.08);
+  border-color: rgba(22,163,74,0.3);
+}
+.prop-item.highlight-rose {
+  background: rgba(244, 63, 94, 0.08);
+  border-color: rgba(244, 63, 94, 0.3);
+}
+.prop-label {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.prop-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+.prop-item.highlight .prop-val { color: var(--success); }
+.prop-item.highlight-rose .prop-val { color: var(--rose); }
+
+/* Results Section */
+.results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.metric {
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 14px;
+  background: var(--input-bg);
+}
+.metric small { display: block; color: var(--muted); font-size: 12px; margin-bottom: 6px; font-weight: 500; }
+.metric strong { font-size: 18px; color: var(--text); }
+.metric.highlight { 
+  background: rgba(22,163,74,0.08); 
+  border-color: rgba(22,163,74,0.3); 
+  border-left: 4px solid var(--green);
+}
+.metric.highlight strong { color: var(--success); }
+.metric.highlight-rose { 
+  background: rgba(244, 63, 94, 0.08); 
+  border-color: rgba(244, 63, 94, 0.3); 
+  border-left: 4px solid var(--rose);
+}
+.metric.highlight-rose strong { color: var(--rose); }
+
+/* Tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; margin-top: 10px; }
+table { border-collapse: collapse; width: 100%; min-width: 680px; font-size: 13px; }
+th, td { padding: 12px; border-bottom: 1px solid var(--border); text-align: right; white-space: nowrap; color: var(--text); }
+th { background: var(--input-bg); text-align: right; color: var(--muted); font-weight: 600; }
+th:first-child, td:first-child { text-align: left; }
+tr:last-child td { border-bottom: 0; }
+tfoot tr th { color: var(--text); background: var(--input-bg); }
+
+tr.quarter-q1 { background-color: rgba(37, 99, 235, 0.06); }
+tr.quarter-q2 { background-color: rgba(22, 163, 74, 0.06); }
+tr.quarter-q3 { background-color: rgba(234, 179, 8, 0.06); }
+tr.quarter-q4 { background-color: rgba(168, 85, 247, 0.06); }
+tr.quarter-border-top td { border-top: 2px solid var(--card-border); }
+
+.badge-quarter {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  text-transform: uppercase;
+}
+.bq-q1 { background: rgba(37, 99, 235, 0.25); color: #2563eb; }
+.bq-q2 { background: rgba(22, 163, 74, 0.25); color: #16a34a; }
+.bq-q3 { background: rgba(234, 179, 8, 0.25); color: #ca8a04; }
+.bq-q4 { background: rgba(168, 85, 247, 0.25); color: #9333ea; }
+body:not(.light-theme) .bq-q1 { color: #93c5fd; }
+body:not(.light-theme) .bq-q2 { color: #86efac; }
+body:not(.light-theme) .bq-q3 { color: #fde047; }
+body:not(.light-theme) .bq-q4 { color: #d8b4fe; }
+
+.note { font-size: 12px; color: var(--muted); line-height: 1.5; margin-top: 12px; }
+.hidden { display: none !important; }
+
+.settings-card { 
+  border: 1px solid var(--card-border); 
+  border-top: 3px solid #38bdf8;
+  background: var(--card); 
+}
+.settings-card h2 { color: #0284c7; }
+body:not(.light-theme) .settings-card h2 { color: #38bdf8; }
+
+/* Banker Zahid Contact Card */
+.zahid-card {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 20%, var(--card) 0%, var(--bg) 80%);
+  border: 1.5px solid #881337;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+  border-radius: 20px;
+  padding: 32px 24px;
+  text-align: center;
+}
+.zahid-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #dc2626 50%, transparent 100%);
+}
+.zahid-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(234, 179, 8, 0.08);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  color: #ca8a04;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 14px;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+body:not(.light-theme) .zahid-badge { color: #fde047; }
+
+.zahid-title {
+  font-weight: 900;
+  font-size: 32px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin-bottom: 6px;
+  background: linear-gradient(180deg, #d97706 0%, #ca8a04 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+body:not(.light-theme) .zahid-title {
+  background: linear-gradient(180deg, #ffffff 0%, #fef08a 40%, #eab308 75%, #ca8a04 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.9));
+}
+
+.zahid-sub {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 22px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.zahid-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.zahid-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+.zahid-btn.call {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  border: 1px solid rgba(147, 197, 253, 0.4);
+}
+.zahid-btn.call:hover {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+.zahid-btn.whatsapp {
+  background: linear-gradient(135deg, #15803d, #166534);
+  color: #ffffff;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+.zahid-btn.whatsapp:hover {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3);
+}
+.zahid-disclaimer {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 20px;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+@media(max-width:700px){
+  .container { padding: 0; }
+  .brand-name { font-size: 22px; }
+  .box-brand h1 { font-size: 18px; }
+  .zahid-title { font-size: 26px; }
+  .grid, .results, .property-grid-2, .property-grid-3 { grid-template-columns: 1fr; }
+  .plan-grid { grid-template-columns: repeat(2, 1fr); }
+  .card { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <!-- BOX 1: Bank Branding Header -->
+  <div class="box-bank-header">
+    <div class="brand">
+      <div class="brand-container">
+        <div class="brand-name">Dutch-Bangla Bank PLC</div>
+        <div class="brand-subtitle">Your Trusted Partner</div>
+      </div>
+    </div>
+    
+    <div class="brand-divider">
+      <div class="b1"></div>
+      <div class="b2"></div>
+      <div class="b3"></div>
+    </div>
+  </div>
+
+  <!-- BOX 2: Officer Assistance Box -->
+  <div class="box-assistance">
+    <div class="assistance-title">For Sales & Service Officers' Assistance</div>
+    <div class="assistance-sub">Brought to you by Banker Zahid</div>
+  </div>
+
+  <!-- BOX 3: Navigation Toolbar Row -->
+  <div class="box-navigation">
+    <button class="tab-btn active" id="tabFdrBtn" onclick="switchTab('fdr')">
+      <span>💰 FDR</span>
+    </button>
+    <button class="tab-btn" id="tabDpsBtn" onclick="switchTab('dps')">
+      <span>📈 DPS</span>
+    </button>
+    <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">
+      <span id="themeIcon">☀️</span> <span id="themeLabel">Light Mode</span>
+    </button>
+    <button class="settings-toggle-btn" onclick="toggleSettings()">
+      <span class="gear-icon">⚙️</span>
+      <span>Rates Manager</span>
+    </button>
+  </div>
+
+  <!-- Global Rates Manager Card -->
+  <div class="card settings-card hidden" id="settingsCard">
+    <h2>
+      <span>⚙️ Global Rates Manager</span>
+      <button style="background:var(--border); color:var(--text); padding: 4px 10px; font-size: 11px;" onclick="toggleSettings()">✕ Close</button>
+    </h2>
+    <div class="grid">
+      <div>
+        <label for="cfgTaxNo">Tax Rate (IT Return Not Submitted) %</label>
+        <input id="cfgTaxNo" type="number" step="0.1" value="15.0">
+      </div>
+      <div>
+        <label for="cfgTaxYes">Tax Rate (IT Return Submitted) %</label>
+        <input id="cfgTaxYes" type="number" step="0.1" value="10.0">
+      </div>
+    </div>
+
+    <div style="margin-top:16px">
+      <label>FDR Interest Rates (% p.a.)</label>
+      <div class="grid">
+        <div>
+          <label for="cfgRate3">3 Months Plan Rate (%)</label>
+          <input id="cfgRate3" type="number" step="0.01" value="7.00">
+        </div>
+        <div>
+          <label for="cfgRate6">6 Months Plan Rate (%)</label>
+          <input id="cfgRate6" type="number" step="0.01" value="7.10">
+        </div>
+        <div>
+          <label for="cfgRate12">12 Months Plan Rate (%)</label>
+          <input id="cfgRate12" type="number" step="0.01" value="7.20">
+        </div>
+        <div>
+          <label for="cfgRate13">13 Months Plan Rate (%)</label>
+          <input id="cfgRate13" type="number" step="0.01" value="8.50">
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px">
+      <label>DPS Default Interest Rate (% p.a.)</label>
+      <div class="grid">
+        <div>
+          <label for="cfgDpsRate">Annual Interest Rate (%)</label>
+          <input id="cfgDpsRate" type="number" step="0.01" value="9.50">
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-calc" onclick="saveCustomRates()">Save Rates</button>
+      <button class="danger" onclick="resetDefaultRates()">Reset Defaults</button>
+    </div>
+  </div>
+
+  <!-- BOX 4: Calculator Description Header -->
+  <div class="box-brand">
+    <h1 id="mainTitle">Fixed Deposit Receipt (FDR) Calculator</h1>
+    
+    <p>Calculates Gross Interest, Tax Deductions, Net Interest, and Maturity Value. Tax and Interest Rates reflect current Effective Rates as of Last Version Update Dated August 16, 2026. (For Changes in Rates, Update at - Rates Manager). Please note that EXCISE DUTY deductions are NOT INCLUDED.</p>
+    <div class="version-tag">V 4.5.12 DATED 16 AUG 2026</div>
+  </div>
+
+  <!-- ==================== TAB 1: FDR CALCULATOR ==================== -->
+  <div id="fdrSection">
+    <div class="card">
+      <h2>1. Deposit & Plan (FDR)</h2>
+      <div class="grid">
+        <div>
+          <label for="principal">Deposit Amount (BDT)</label>
+          <input id="principal" type="text" inputmode="decimal" autocomplete="off" placeholder="100,000.00" aria-label="Deposit Amount in BDT">
+          <div id="amountInWords" class="in-words"></div>
+        </div>
+        <div>
+          <label for="itFdr">Income Tax Return Status</label>
+          <select id="itFdr">
+            <option value="15" id="optFdrTax15">IT Return Not Submitted — 15%</option>
+            <option value="10" id="optFdrTax10">IT Return Submitted — 10%</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <label>Fixed Deposit Plan</label>
+        <div class="plan-grid" id="fdrPlans">
+          <div class="plan active" data-months="3" data-rate="7.00"><strong>3 Months</strong><span id="lblRate3">7.00% p.a.</span></div>
+          <div class="plan" data-months="6" data-rate="7.10"><strong>6 Months</strong><span id="lblRate6">7.10% p.a.</span></div>
+          <div class="plan" data-months="12" data-rate="7.20"><strong>12 Months</strong><span id="lblRate12">7.20% p.a.</span></div>
+          <div class="plan" data-months="13" data-rate="8.50"><strong>13 Months</strong><span id="lblRate13">8.50% p.a.</span></div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <label>Rollover Option</label>
+        <div class="radio-row">
+          <label class="radio"><input type="radio" name="renewal" value="none" checked> Close On Maturity</label>
+          <label class="radio"><input type="radio" name="renewal" value="principal"> Renew Principal Only</label>
+          <label class="radio"><input type="radio" name="renewal" value="both"> Renew Principal + Interest</label>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <label>Auto-Renewal Projection Horizon</label>
+        <div class="horizon-grid">
+          <div>
+            <label for="projYears">Years</label>
+            <input id="projYears" type="number" min="0" max="20" value="2" placeholder="2">
+          </div>
+          <div>
+            <label for="projMonths">Months (Additional)</label>
+            <input id="projMonths" type="number" min="0" max="11" value="0" placeholder="0">
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-calc" onclick="calculateFDR()">Calculate - Projection</button>
+        <button class="btn-reset" onclick="resetFDR()">Reset</button>
+      </div>
+    </div>
+
+    <!-- FDR Output -->
+    <div id="fdrOutput" class="hidden">
+      <div class="card">
+        <h2>2. FDR Calculation Summary</h2>
+        
+        <!-- Group 1: Deposit Parameters & Rates -->
+        <div class="summary-group">
+          <div class="summary-group-title">📌 Deposit Parameters & Rates</div>
+          <div class="property-grid-2">
+            <div class="prop-item"><span class="prop-label">Deposit Principal</span><span class="prop-val" id="rPrincipal">৳0.00</span></div>
+            <div class="prop-item"><span class="prop-label">Selected Plan</span><span class="prop-val" id="rPlan">—</span></div>
+            <div class="prop-item"><span class="prop-label">Income Tax Rate</span><span class="prop-val" id="rTaxRate">0%</span></div>
+            <div class="prop-item"><span class="prop-label">Rollover Option</span><span class="prop-val" id="rRenewalOption">—</span></div>
+          </div>
+        </div>
+
+        <!-- Group 2: Periodic Interest & Tax Breakdown -->
+        <div class="summary-group">
+          <div class="summary-group-title">📊 Periodic Interest & Tax Breakdown</div>
+          <div class="property-grid-3">
+            <div class="prop-item"><span class="prop-label">Daily Gross Interest</span><span class="prop-val" id="rDailyGross">৳0.00</span></div>
+            <div class="prop-item highlight-rose"><span class="prop-label">Daily Tax Deducted</span><span class="prop-val" id="rDailyTax">৳0.00</span></div>
+            <div class="prop-item highlight"><span class="prop-label">Daily Net Interest</span><span class="prop-val" id="rDailyNet">৳0.00</span></div>
+            
+            <div class="prop-item"><span class="prop-label">Monthly Gross Interest</span><span class="prop-val" id="rMonthly">৳0.00</span></div>
+            <div class="prop-item highlight-rose"><span class="prop-label">Monthly Tax Deducted</span><span class="prop-val" id="rMonthlyTax">৳0.00</span></div>
+            <div class="prop-item highlight"><span class="prop-label">Monthly Net Interest</span><span class="prop-val" id="rMonthlyNet">৳0.00</span></div>
+
+            <div class="prop-item"><span class="prop-label">Yearly Gross Interest</span><span class="prop-val" id="rYearlyGross">৳0.00</span></div>
+            <div class="prop-item highlight-rose"><span class="prop-label">Yearly Tax Deducted</span><span class="prop-val" id="rYearlyTax">৳0.00</span></div>
+            <div class="prop-item highlight"><span class="prop-label">Yearly Net Interest</span><span class="prop-val" id="rYearlyNet">৳0.00</span></div>
+          </div>
+        </div>
+
+        <!-- Group 3: Plan Maturity - Summary -->
+        <div class="summary-group">
+          <div class="summary-group-title">🎯 Plan Maturity - Summary</div>
+          <div class="property-grid-3">
+            <div class="prop-item"><span class="prop-label">Gross Rate (p.a.)</span><span class="prop-val" id="rRateMat">0%</span></div>
+            <div class="prop-item highlight"><span class="prop-label">Effective Net Rate (p.a.)</span><span class="prop-val" id="rNetAnnualRate">0%</span></div>
+            <div class="prop-item"><span class="prop-label" id="lblGrossTerm">Gross Interest</span><span class="prop-val" id="rGross">৳0.00</span></div>
+            
+            <div class="prop-item highlight-rose"><span class="prop-label" id="lblTaxTerm">Tax Deducted</span><span class="prop-val" id="rTax">৳0.00</span></div>
+            <div class="prop-item highlight"><span class="prop-label" id="lblNetTerm">Net Interest</span><span class="prop-val" id="rNet">৳0.00</span></div>
+            <div class="prop-item"><span class="prop-label" id="lblGrossMaturityTerm">Gross Term Maturity Amount</span><span class="prop-val" id="rGrossMaturity">৳0.00</span></div>
+
+            <div class="prop-item highlight"><span class="prop-label" id="lblMaturityTerm">Term Maturity Amount</span><span class="prop-val" id="rMaturity">৳0.00</span></div>
+          </div>
+        </div>
+
+        <!-- Group 4: Renewal Projection - Summary -->
+        <div class="summary-group hidden" id="horizonSummaryBox">
+          <div class="summary-group-title">🌐 Renewal Projection - Summary</div>
+          <div class="property-grid-3">
+            <div class="prop-item"><span class="prop-label">Target Horizon & Cycles</span><span class="prop-val" id="hzTargetCycles">—</span></div>
+            <div class="prop-item"><span class="prop-label">Cumulative Gross Interest</span><span class="prop-val" id="hzGross">৳0.00</span></div>
+            <div class="prop-item highlight-rose"><span class="prop-label">Cumulative Tax Deducted</span><span class="prop-val" id="hzTax">৳0.00</span></div>
+            
+            <div class="prop-item highlight"><span class="prop-label">Cumulative Net Interest</span><span class="prop-val" id="hzNet">৳0.00</span></div>
+            <div class="prop-item"><span class="prop-label">Final Horizon Gross Payout</span><span class="prop-val" id="hzGrossPayout">৳0.00</span></div>
+            <div class="prop-item highlight"><span class="prop-label">Final Horizon Net Payout</span><span class="prop-val" id="hzPayout">৳0.00</span></div>
+          </div>
+        </div>
+
+        <div class="note">Interest is calculated monthly using annual rate ÷ 12. Daily figures are based on a 365-day year. Tax is applied exclusively to interest, not principal. EXCISE DUTY deductions are NOT INCLUDED.</div>
+      </div>
+
+      <div class="card">
+        <h2 id="monthlyTitle">3. Monthly Breakdown</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Month</th><th>Opening Principal</th><th>Gross Interest</th><th>Tax</th><th>Net Interest</th><th>Accumulated Net Interest</th></tr></thead>
+            <tbody id="monthlyBody"></tbody>
+            <tfoot><tr><th id="lblTotalPeriod">Total</th><th id="tPrincipal">—</th><th id="tGross">—</th><th id="tTax">—</th><th id="tNet">—</th><th id="tAccum">—</th></tr></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Auto-Renewal Illustration Table Section -->
+      <div class="card" id="renewalCard">
+        <h2>4. Auto-Renewal Illustration Table</h2>
+        <div id="renewalText" class="note" style="margin-bottom:12px;"></div>
+
+        <div class="table-wrap" id="renewalWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Cycle</th>
+                <th>Opening Amount</th>
+                <th>Gross Interest</th>
+                <th>Tax</th>
+                <th>Net Interest</th>
+                <th>Accumulated Net Interest</th>
+                <th>End Amount</th>
+              </tr>
+            </thead>
+            <tbody id="renewalBody"></tbody>
+            <tfoot id="renewalFoot"></tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TAB 2: DPS CALCULATOR ==================== -->
+  <div id="dpsSection" class="hidden">
+    <div class="card">
+      <h2>1. Deposit & Plan (DPS)</h2>
+      
+      <div style="margin-bottom:16px">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+          <label for="dpsInstallment" style="margin:0">Monthly Installment (BDT)</label>
+          <span style="font-size:11px; color:var(--muted)">(Min: 500 | Max: 50,000 | Step: 500)</span>
+        </div>
+        
+        <input 
+          type="text" 
+          id="dpsInstallment" 
+          inputmode="decimal"
+          autocomplete="off"
+          placeholder="5,000.00" 
+          aria-label="Monthly Installment in BDT"
+        >
+        <div id="dpsAmountInWords" class="in-words"></div>
+        <p id="dpsStepError" class="note hidden" style="color:#ef4444; margin-top:4px;">Amount must be between 500 and 50,000 in multiples of 500.</p>
+      </div>
+
+      <div class="grid">
+        <div>
+          <label for="dpsRate">Interest Rate (% p.a.)</label>
+          <input type="number" id="dpsRate" value="9.50" step="0.01" min="0">
+        </div>
+
+        <div>
+          <label for="itDps">Income Tax Return Status</label>
+          <select id="itDps">
+            <option value="15" id="optDpsTax15">IT Return Not Submitted — 15%</option>
+            <option value="10" id="optDpsTax10">IT Return Submitted — 10%</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <label>Tenure (Years)</label>
+        <div class="plan-grid">
+          <div class="plan" id="planDps3" onclick="selectDpsTenure(3)"><strong>3 Years</strong><span>36 Months</span></div>
+          <div class="plan active" id="planDps5" onclick="selectDpsTenure(5)"><strong>5 Years</strong><span>60 Months</span></div>
+          <div class="plan" id="planDps8" onclick="selectDpsTenure(8)"><strong>8 Years</strong><span>96 Months</span></div>
+          <div class="plan" id="planDps10" onclick="selectDpsTenure(10)"><strong>10 Years</strong><span>120 Months</span></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-calc" onclick="calculateDPS()">Calculate - Projection</button>
+        <button class="btn-reset" onclick="resetDPS()">Reset</button>
+      </div>
+    </div>
+
+    <!-- DPS Output -->
+    <div id="dpsOutput" class="hidden">
+      <div class="card">
+        <h2>2. DPS Projection Summary</h2>
+        <div class="results">
+          <div class="metric"><small>Tenure</small><strong id="outDpsBadge">5 Years</strong></div>
+          <div class="metric"><small>Installment Count</small><strong id="outInstallmentCount">60</strong></div>
+          <div class="metric"><small>Total Principle Deposited</small><strong id="outPrinciple">৳0.00</strong></div>
+          <div class="metric highlight"><small>Bank Payout (Before Tax)</small><strong id="outBankPayout">৳0.00</strong></div>
+          <div class="metric"><small>Gross Profit</small><strong id="outProfit">৳0.00</strong></div>
+          <div class="metric"><small id="outTaxLabel">Tax Deduction (15%)</small><strong id="outTaxDeduction">৳0.00</strong></div>
+          <div class="metric highlight"><small>Net Profit After Tax</small><strong id="outNetProfit">৳0.00</strong></div>
+          <div class="metric highlight-rose"><small>Final Payout (Principle + Net Profit)</small><strong id="outFinalPayout">৳0.00</strong></div>
+        </div>
+        <div class="note">DPS payout uses Annuity Due Compounding model. Net payout is subject to final tax deduction at maturity. EXCISE DUTY deductions are NOT INCLUDED.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Officer Branding Card -->
+  <div class="card zahid-card">
+    <div class="zahid-badge">✦ BROUGHT TO YOU BY ✦</div>
+    <div class="zahid-title">BANKER ZAHID</div>
+    <div class="zahid-sub">Dutch-Bangla Bank PLC</div>
+    <div class="zahid-buttons">
+      <a class="zahid-btn call" href="tel:+8801601226537">
+        <span>☎ Direct Call</span>
+      </a>
+      <a class="zahid-btn whatsapp" href="https://wa.me/8801601226537" target="_blank" rel="noopener">
+        <span>💬 WhatsApp</span>
+      </a>
+    </div>
+    <div class="zahid-disclaimer">
+      * For calculation assistance and illustrative purposes only. Projected yields reflect user-configured inputs and current tax & interest rates, which are subject to real-time changes without prior notice. Final payout amounts may vary subject to statutory government levies, excise duty, and official Dutch-Bangla Bank PLC policies at maturity or premature closure. Banker Zahid holds no liability or responsibility for real-world rate adjustments, policy variations, or operational assumptions.
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Default Bank Rates Config
+const DEFAULT_RATES = {
+  taxNo: 15.0,
+  taxYes: 10.0,
+  plan3: 7.00,
+  plan6: 7.10,
+  plan12: 7.20,
+  plan13: 8.50,
+  dpsRate: 9.50
+};
+
+let currentRates = { ...DEFAULT_RATES };
+let selectedFdrPlan = { months: 3, rate: 7.00 };
+let selectedDpsTenure = 5;
+
+// Helper function: Converts total months into clean "X Y Z M" format
+function formatYearsMonths(totalMonths) {
+  const yrs = Math.floor(totalMonths / 12);
+  const mos = totalMonths % 12;
+  
+  if (yrs > 0 && mos > 0) return `${yrs}Y ${mos}M`;
+  if (yrs > 0) return `${yrs}Y`;
+  return `${mos}M`;
+}
+
+// Universal Horizon Adjuster: Auto-adjusts Y & M for ALL plans to nearest full cycle
+function updateHorizonForPlan(planMonths) {
+  const yrsInput = document.getElementById('projYears');
+  const mosInput = document.getElementById('projMonths');
+
+  const curYrs = Math.max(0, parseInt(yrsInput.value) || 0);
+  const curMos = Math.max(0, parseInt(mosInput.value) || 0);
+  let totMos = (curYrs * 12) + curMos;
+
+  // Default to 24 months (or 26 months for 13M) if 0
+  if (totMos <= 0) {
+    totMos = planMonths === 13 ? 26 : 24;
+  }
+
+  // Nearest-neighbor rounding to closest cycle
+  const cycles = Math.max(1, Math.round(totMos / planMonths));
+  const adjustedTotalMonths = cycles * planMonths;
+
+  yrsInput.value = Math.floor(adjustedTotalMonths / 12);
+  mosInput.value = adjustedTotalMonths % 12;
+}
+
+// Theme Switching Functions
+function toggleTheme() {
+  document.body.classList.toggle('light-theme');
+  const isLight = document.body.classList.contains('light-theme');
+  
+  document.getElementById('themeIcon').innerText = isLight ? '🌙' : '☀️';
+  document.getElementById('themeLabel').innerText = isLight ? 'Dark Mode' : 'Light Mode';
+  
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute('content', isLight ? '#f3f4f6' : '#0d0f12');
+  }
+  
+  localStorage.setItem('dbbl_theme', isLight ? 'light' : 'dark');
+}
+
+function loadTheme() {
+  const savedTheme = localStorage.getItem('dbbl_theme');
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-theme');
+    document.getElementById('themeIcon').innerText = '🌙';
+    document.getElementById('themeLabel').innerText = 'Dark Mode';
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) metaTheme.setAttribute('content', '#f3f4f6');
+  }
+}
+
+// Load Stored Rates
+function loadStoredRates() {
+  const saved = localStorage.getItem('dbbl_fdr_dps_rates');
+  if (saved) {
+    try {
+      currentRates = { ...DEFAULT_RATES, ...JSON.parse(saved) };
+    } catch(e) {
+      currentRates = { ...DEFAULT_RATES };
+    }
+  }
+  applyRatesToUI();
+}
+
+function applyRatesToUI() {
+  document.getElementById('cfgTaxNo').value = currentRates.taxNo;
+  document.getElementById('cfgTaxYes').value = currentRates.taxYes;
+  document.getElementById('cfgRate3').value = currentRates.plan3;
+  document.getElementById('cfgRate6').value = currentRates.plan6;
+  document.getElementById('cfgRate12').value = currentRates.plan12;
+  document.getElementById('cfgRate13').value = currentRates.plan13;
+  document.getElementById('cfgDpsRate').value = currentRates.dpsRate;
+
+  const optFdrTaxNo = document.getElementById('optFdrTax15');
+  const optFdrTaxYes = document.getElementById('optFdrTax10');
+  optFdrTaxNo.value = currentRates.taxNo;
+  optFdrTaxNo.innerText = `IT Return Not Submitted — ${currentRates.taxNo}%`;
+  optFdrTaxYes.value = currentRates.taxYes;
+  optFdrTaxYes.innerText = `IT Return Submitted — ${currentRates.taxYes}%`;
+
+  const optDpsTaxNo = document.getElementById('optDpsTax15');
+  const optDpsTaxYes = document.getElementById('optDpsTax10');
+  optDpsTaxNo.value = currentRates.taxNo;
+  optDpsTaxNo.innerText = `IT Return Not Submitted — ${currentRates.taxNo}%`;
+  optDpsTaxYes.value = currentRates.taxYes;
+  optDpsTaxYes.innerText = `IT Return Submitted — ${currentRates.taxYes}%`;
+
+  const fdrPlans = document.querySelectorAll('#fdrPlans .plan');
+  fdrPlans.forEach(p => {
+    const m = Number(p.dataset.months);
+    let rate = 7.00;
+    if (m === 3) rate = currentRates.plan3;
+    else if (m === 6) rate = currentRates.plan6;
+    else if (m === 12) rate = currentRates.plan12;
+    else if (m === 13) rate = currentRates.plan13;
+    
+    p.dataset.rate = rate;
+    p.querySelector('span').innerText = `${Number(rate).toFixed(2)}% p.a.`;
+    
+    if (p.classList.contains('active')) {
+      selectedFdrPlan.rate = rate;
+    }
+  });
+
+  document.getElementById('dpsRate').value = currentRates.dpsRate;
+}
+
+function saveCustomRates() {
+  currentRates.taxNo = Number(document.getElementById('cfgTaxNo').value) || 15;
+  currentRates.taxYes = Number(document.getElementById('cfgTaxYes').value) || 10;
+  currentRates.plan3 = Number(document.getElementById('cfgRate3').value) || 7;
+  currentRates.plan6 = Number(document.getElementById('cfgRate6').value) || 7.1;
+  currentRates.plan12 = Number(document.getElementById('cfgRate12').value) || 7.2;
+  currentRates.plan13 = Number(document.getElementById('cfgRate13').value) || 8.5;
+  currentRates.dpsRate = Number(document.getElementById('cfgDpsRate').value) || 9.5;
+
+  localStorage.setItem('dbbl_fdr_dps_rates', JSON.stringify(currentRates));
+  applyRatesToUI();
+  alert('Global rates updated successfully!');
+  toggleSettings();
+}
+
+function resetDefaultRates() {
+  if (confirm('Are you sure you want to reset all rates back to default values?')) {
+    currentRates = { ...DEFAULT_RATES };
+    localStorage.removeItem('dbbl_fdr_dps_rates');
+    applyRatesToUI();
+    alert('Rates reset to default values.');
+  }
+}
+
+function toggleSettings() {
+  document.getElementById('settingsCard').classList.toggle('hidden');
+}
+
+function switchTab(tab) {
+  const fdrBtn = document.getElementById('tabFdrBtn');
+  const dpsBtn = document.getElementById('tabDpsBtn');
+  const fdrSec = document.getElementById('fdrSection');
+  const dpsSec = document.getElementById('dpsSection');
+  const mainTitle = document.getElementById('mainTitle');
+
+  if (tab === 'fdr') {
+    fdrBtn.classList.add('active');
+    dpsBtn.classList.remove('active');
+    fdrSec.classList.remove('hidden');
+    dpsSec.classList.add('hidden');
+    mainTitle.innerText = 'Fixed Deposit Receipt (FDR) Calculator';
+  } else {
+    dpsBtn.classList.add('active');
+    fdrBtn.classList.remove('active');
+    dpsSec.classList.remove('hidden');
+    fdrSec.classList.add('hidden');
+    mainTitle.innerText = 'Deposit Pension Scheme (DPS) Calculator';
+  }
+}
+
+function money(n) {
+  return new Intl.NumberFormat('en-BD', { style: 'currency', currency: 'BDT', minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    .format(n).replace('BDT', '৳');
+}
+
+function parseAmount(value) {
+  const cleaned = String(value).replace(/,/g, '').replace(/[^\d.]/g, '');
+  const parts = cleaned.split('.');
+  const normalized = parts.length > 1 ? parts[0] + '.' + parts.slice(1).join('') : parts[0];
+  const n = Number(normalized);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function formatInputAmount(value) {
+  const n = parseAmount(value);
+  if (!n) return '';
+  return n.toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function numberToWordsBDT(amount) {
+  const n = Math.floor(amount);
+  if (n <= 0) return '';
+  
+  const units = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 
+                 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+  const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+  function convertChunk(num) {
+    let str = '';
+    if (num >= 100) {
+      str += units[Math.floor(num / 100)] + ' Hundred ';
+      num %= 100;
+    }
+    if (num >= 20) {
+      str += tens[Math.floor(num / 10)] + ' ';
+      num %= 10;
+    }
+    if (num > 0) {
+      str += units[num] + ' ';
+    }
+    return str;
+  }
+
+  let result = '';
+  let crore = Math.floor(n / 10000000);
+  let remainder = n % 10000000;
+  let lakh = Math.floor(remainder / 100000);
+  remainder %= 100000;
+  let thousand = Math.floor(remainder / 1000);
+  remainder %= 1000;
+
+  if (crore > 0) result += convertChunk(crore) + 'Crore ';
+  if (lakh > 0) result += convertChunk(lakh) + 'Lakh ';
+  if (thousand > 0) result += convertChunk(thousand) + 'Thousand ';
+  if (remainder > 0) result += convertChunk(remainder);
+
+  return result.trim() ? '(' + result.trim() + ' Taka Only)' : '';
+}
+
+const principalInput = document.getElementById('principal');
+const amountInWordsDiv = document.getElementById('amountInWords');
+
+principalInput.addEventListener('input', () => {
+  const num = parseAmount(principalInput.value);
+  amountInWordsDiv.innerText = num > 0 ? numberToWordsBDT(num) : '';
+});
+
+principalInput.addEventListener('blur', () => {
+  if (principalInput.value) {
+    principalInput.value = formatInputAmount(principalInput.value);
+  }
+});
+
+const dpsInstInput = document.getElementById('dpsInstallment');
+const dpsAmountInWords = document.getElementById('dpsAmountInWords');
+
+dpsInstInput.addEventListener('input', () => {
+  const num = parseAmount(dpsInstInput.value);
+  dpsAmountInWords.innerText = num > 0 ? numberToWordsBDT(num) : '';
+});
+
+dpsInstInput.addEventListener('blur', () => {
+  if (dpsInstInput.value) {
+    dpsInstInput.value = formatInputAmount(dpsInstInput.value);
+  }
+});
+
+const fdrPlans = document.querySelectorAll('#fdrPlans .plan');
+fdrPlans.forEach(p => {
+  p.addEventListener('click', () => {
+    fdrPlans.forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    const months = Number(p.dataset.months);
+    selectedFdrPlan = { months: months, rate: Number(p.dataset.rate) };
+    updateHorizonForPlan(months);
+  });
+});
+
+function resetFDR() {
+  principalInput.value = '';
+  amountInWordsDiv.innerText = '';
+  document.getElementById('itFdr').selectedIndex = 0;
+  fdrPlans[0].click();
+  document.querySelectorAll('input[name="renewal"]')[0].checked = true;
+  document.getElementById('projYears').value = '2';
+  document.getElementById('projMonths').value = '0';
+  document.getElementById('fdrOutput').classList.add('hidden');
+}
+
+function calculateFDR() {
+  const p = parseAmount(principalInput.value);
+  if (!p || p <= 0) {
+    alert('Please enter a valid deposit amount.');
+    return;
+  }
+  
+  const taxRatePercent = Number(document.getElementById('itFdr').value);
+  const taxRate = taxRatePercent / 100;
+  const planMonths = selectedFdrPlan.months;
+  
+  // Auto-adjust Horizon for all plans before calculating
+  updateHorizonForPlan(planMonths);
+
+  const annualRatePercent = selectedFdrPlan.rate;
+  const monthlyRate = (annualRatePercent / 100) / 12;
+  
+  const monthlyGross = p * monthlyRate;
+  const monthlyTax = monthlyGross * taxRate;
+  const monthlyNet = monthlyGross - monthlyTax;
+
+  const dailyGross = (monthlyGross * 12) / 365;
+  const dailyTax = dailyGross * taxRate;
+  const dailyNet = dailyGross - dailyTax;
+
+  const yearlyGross = monthlyGross * 12;
+  const yearlyTax = yearlyGross * taxRate;
+  const yearlyNet = yearlyGross - yearlyTax;
+  
+  const totalGross = monthlyGross * planMonths;
+  const totalTax = totalGross * taxRate;
+  const totalNet = totalGross - totalTax;
+  const maturityAmount = p + totalNet;
+  const grossMaturityAmount = p + totalGross;
+
+  const netAnnualRate = annualRatePercent * (1 - taxRate);
+
+  const renewalType = document.querySelector('input[name="renewal"]:checked').value;
+  let renewalLabel = "Close On Maturity";
+  if (renewalType === "principal") renewalLabel = "Renew Principal Only";
+  if (renewalType === "both") renewalLabel = "Renew Principal + Interest";
+  
+  document.getElementById('rPrincipal').innerText = money(p);
+  document.getElementById('rPlan').innerText = planMonths + ' Months';
+  document.getElementById('rTaxRate').innerText = taxRatePercent + '%';
+  document.getElementById('rRenewalOption').innerText = renewalLabel;
+
+  // Periodic Interest & Tax Breakdown Grid Cards
+  document.getElementById('rDailyGross').innerText = money(dailyGross);
+  document.getElementById('rDailyTax').innerText = money(dailyTax);
+  document.getElementById('rDailyNet').innerText = money(dailyNet);
+  
+  document.getElementById('rMonthly').innerText = money(monthlyGross);
+  document.getElementById('rMonthlyTax').innerText = money(monthlyTax);
+  document.getElementById('rMonthlyNet').innerText = money(monthlyNet);
+
+  document.getElementById('rYearlyGross').innerText = money(yearlyGross);
+  document.getElementById('rYearlyTax').innerText = money(yearlyTax);
+  document.getElementById('rYearlyNet').innerText = money(yearlyNet);
+
+  // Term Maturity Grid Calculations
+  document.getElementById('rRateMat').innerText = annualRatePercent.toFixed(2) + '%';
+  document.getElementById('rNetAnnualRate').innerText = netAnnualRate.toFixed(2) + '%';
+  
+  document.getElementById('lblGrossTerm').innerText = `Gross Interest (${planMonths}M)`;
+  document.getElementById('lblTaxTerm').innerText = `Tax Deducted (${planMonths}M)`;
+  document.getElementById('lblNetTerm').innerText = `Net Interest (${planMonths}M)`;
+  document.getElementById('lblGrossMaturityTerm').innerText = `Gross Term Maturity Amount (${planMonths}M)`;
+  document.getElementById('lblMaturityTerm').innerText = `Term Maturity Amount (${planMonths}M)`;
+
+  document.getElementById('rGross').innerText = money(totalGross);
+  document.getElementById('rTax').innerText = money(totalTax);
+  document.getElementById('rNet').innerText = money(totalNet);
+  document.getElementById('rGrossMaturity').innerText = money(grossMaturityAmount);
+  document.getElementById('rMaturity').innerText = money(maturityAmount);
+  
+  // Dynamic Horizon Computation
+  const pYears = Math.max(0, parseInt(document.getElementById('projYears').value) || 0);
+  const pMonths = Math.max(0, parseInt(document.getElementById('projMonths').value) || 0);
+  let totalTargetMonths = (pYears * 12) + pMonths;
+  if (totalTargetMonths <= 0) totalTargetMonths = planMonths === 13 ? 26 : 24;
+
+  // Monthly Breakdown Setup
+  const totalBreakdownMonths = (planMonths === 13) ? 13 : 12;
+
+  document.getElementById('monthlyTitle').innerText = `3. Monthly Breakdown (${totalBreakdownMonths} Months Projection)`;
+  document.getElementById('lblTotalPeriod').innerText = `${totalBreakdownMonths}-Month Total`;
+
+  const mBody = document.getElementById('monthlyBody');
+  mBody.innerHTML = '';
+  
+  let currentMonthlyPrincipal = p;
+  let sumGross = 0;
+  let sumTax = 0;
+  let sumNet = 0;
+  let accumNet = 0;
+  let currentCycleAccumNet = 0;
+
+  for (let m = 1; m <= totalBreakdownMonths; m++) {
+    const isStartOfCycle = (m - 1) % planMonths === 0;
+
+    if (isStartOfCycle && m > 1) {
+      if (renewalType === 'both') {
+        currentMonthlyPrincipal += currentCycleAccumNet;
+      }
+      currentCycleAccumNet = 0;
+    }
+
+    const mGross = currentMonthlyPrincipal * monthlyRate;
+    const mTax = mGross * taxRate;
+    const mNet = mGross - mTax;
+
+    sumGross += mGross;
+    sumTax += mTax;
+    sumNet += mNet;
+    accumNet += mNet;
+    currentCycleAccumNet += mNet;
+
+    const qNum = Math.ceil(((m - 1) % 12 + 1) / 3);
+    let quarterClass = `quarter-q${qNum}`;
+    let badgeHtml = '';
+
+    if ((m - 1) % 3 === 0) {
+      if (m > 1) {
+        quarterClass += ' quarter-border-top';
+      }
+      badgeHtml = `<span class="badge-quarter bq-q${qNum}">Q${qNum}</span>`;
+    }
+
+    const tr = document.createElement('tr');
+    tr.className = quarterClass;
+    tr.innerHTML = `<td>Month ${m}${badgeHtml}</td><td>${money(currentMonthlyPrincipal)}</td><td>${money(mGross)}</td><td>${money(mTax)}</td><td>${money(mNet)}</td><td>${money(accumNet)}</td>`;
+    mBody.appendChild(tr);
+  }
+  
+  document.getElementById('tPrincipal').innerText = money(p);
+  document.getElementById('tGross').innerText = money(sumGross);
+  document.getElementById('tTax').innerText = money(sumTax);
+  document.getElementById('tNet').innerText = money(sumNet);
+  document.getElementById('tAccum').innerText = money(accumNet);
+  
+  // Auto-Renewal Horizon Calculations & Section 4 Table Setup
+  const totalCycles = Math.max(1, Math.round(totalTargetMonths / planMonths));
+  const renewalText = document.getElementById('renewalText');
+  const horizonBox = document.getElementById('horizonSummaryBox');
+  const renewalCard = document.getElementById('renewalCard');
+  const rBody = document.getElementById('renewalBody');
+  const rFoot = document.getElementById('renewalFoot');
+  
+  rBody.innerHTML = '';
+  rFoot.innerHTML = '';
+  
+  if (renewalType === 'none') {
+    horizonBox.classList.add('hidden');
+    renewalCard.classList.add('hidden');
+  } else {
+    horizonBox.classList.remove('hidden');
+    renewalCard.classList.remove('hidden');
+    renewalText.innerText = `${totalCycles}-Cycle Projection over ${totalTargetMonths} months (${formatYearsMonths(totalTargetMonths)}) based on configured rates & tax assumptions:`;
+    
+    let currentPrincipal = p;
+    let accumulatedNetInterest = 0;
+    let cumGross = 0;
+    let cumTax = 0;
+
+    for (let cycle = 1; cycle <= totalCycles; cycle++) {
+      const cGross = currentPrincipal * monthlyRate * planMonths;
+      const cTax = cGross * taxRate;
+      const cNet = cGross - cTax;
+      
+      cumGross += cGross;
+      cumTax += cTax;
+      accumulatedNetInterest += cNet;
+      
+      const elapsedMonths = cycle * planMonths;
+      const formattedTime = formatYearsMonths(elapsedMonths);
+
+      const endAmount = renewalType === 'both' ? (currentPrincipal + cNet) : currentPrincipal;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>Cycle ${cycle} (${formattedTime})</td><td>${money(currentPrincipal)}</td><td>${money(cGross)}</td><td>${money(cTax)}</td><td>${money(cNet)}</td><td>${money(accumulatedNetInterest)}</td><td>${money(endAmount)}</td>`;
+      rBody.appendChild(tr);
+
+      if (renewalType === 'both') {
+        currentPrincipal += cNet;
+      }
+    }
+
+    const finalHorizonGrossPayout = p + cumGross;
+    const finalHorizonNetPayout = renewalType === 'both' ? currentPrincipal : (p + accumulatedNetInterest);
+
+    // Populate Standalone Horizon Cumulative Summary Property Grid
+    document.getElementById('hzTargetCycles').innerText = `${formatYearsMonths(totalTargetMonths)} (${totalCycles} Cycles)`;
+    document.getElementById('hzGross').innerText = money(cumGross);
+    document.getElementById('hzTax').innerText = money(cumTax);
+    document.getElementById('hzNet').innerText = money(accumulatedNetInterest);
+    document.getElementById('hzGrossPayout').innerText = money(finalHorizonGrossPayout);
+    document.getElementById('hzPayout').innerText = money(finalHorizonNetPayout);
+
+    // Populate Auto-Renewal Table Footer
+    rFoot.innerHTML = `<tr><th>Horizon Total (${totalCycles} Cycles)</th><th>Initial: ${money(p)}</th><th>${money(cumGross)}</th><th>${money(cumTax)}</th><th>${money(accumulatedNetInterest)}</th><th>${money(accumulatedNetInterest)}</th><th>Ending: ${money(finalHorizonNetPayout)}</th></tr>`;
+  }
+  
+  document.getElementById('fdrOutput').classList.remove('hidden');
+}
+
+function validateDpsAmount() {
+  const raw = parseAmount(dpsInstInput.value);
+  const errEl = document.getElementById('dpsStepError');
+
+  if (raw > 0 && (raw < 500 || raw > 50000 || raw % 500 !== 0)) {
+    errEl.classList.remove('hidden');
+    return false;
+  }
+  errEl.classList.add('hidden');
+  return true;
+}
+
+function selectDpsTenure(years) {
+  selectedDpsTenure = years;
+  const plans = [3, 5, 8, 10];
+  plans.forEach(y => {
+    const el = document.getElementById(`planDps${y}`);
+    if (y === years) {
+      el.classList.add('active');
+    } else {
+      el.classList.remove('active');
+    }
+  });
+}
+
+function resetDPS() {
+  dpsInstInput.value = '';
+  dpsAmountInWords.innerText = '';
+  document.getElementById('dpsRate').value = currentRates.dpsRate;
+  document.getElementById('itDps').selectedIndex = 0;
+  selectDpsTenure(5);
+  document.getElementById('dpsStepError').classList.add('hidden');
+  document.getElementById('dpsOutput').classList.add('hidden');
+}
+
+function calculateDPS() {
+  const M = parseAmount(dpsInstInput.value);
+  if (!M || M <= 0) {
+    alert('Please enter a valid monthly installment amount.');
+    return;
+  }
+
+  if (!validateDpsAmount()) {
+    return;
+  }
+  
+  const annualRate = parseFloat(document.getElementById('dpsRate').value) || 0;
+  const taxRatePercent = parseFloat(document.getElementById('itDps').value);
+  const tenureYears = selectedDpsTenure;
+
+  const N = tenureYears * 12;
+  const i = annualRate / 100 / 12;
+
+  let bankPayout = 0;
+  if (i > 0) {
+    bankPayout = M * (((Math.pow(1 + i, N) - 1) / i) * (1 + i));
+  } else {
+    bankPayout = M * N;
+  }
+
+  const principle = M * N;
+  const profit = bankPayout - principle;
+  const taxDeduction = profit * (taxRatePercent / 100);
+  const netProfit = profit - taxDeduction;
+  const finalPayout = principle + netProfit;
+
+  document.getElementById('outDpsBadge').innerText = `${tenureYears} Years (${N} Months)`;
+  document.getElementById('outInstallmentCount').innerText = `${N}`;
+  document.getElementById('outPrinciple').innerText = money(principle);
+  document.getElementById('outBankPayout').innerText = money(bankPayout);
+  document.getElementById('outProfit').innerText = money(profit);
+  document.getElementById('outTaxLabel').innerText = `Tax Deduction (${taxRatePercent}%)`;
+  document.getElementById('outTaxDeduction').innerText = money(taxDeduction);
+  document.getElementById('outNetProfit').innerText = money(netProfit);
+  document.getElementById('outFinalPayout').innerText = money(finalPayout);
+
+  document.getElementById('dpsOutput').classList.remove('hidden');
+}
+
+window.onload = function() {
+  loadTheme();
+  loadStoredRates();
+};
+</script>
+</body>
+</html>
