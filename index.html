@@ -737,19 +737,19 @@ body:not(.light-theme) .zahid-title {
       <div class="grid">
         <div>
           <label for="cfgRate3">3 Months Plan Rate (%)</label>
-          <input id="cfgRate3" type="number" step="0.01" value="7.00">
+          <input id="cfgRate3" type="number" step="0.01" value="6.00">
         </div>
         <div>
           <label for="cfgRate6">6 Months Plan Rate (%)</label>
-          <input id="cfgRate6" type="number" step="0.01" value="7.10">
+          <input id="cfgRate6" type="number" step="0.01" value="6.10">
         </div>
         <div>
           <label for="cfgRate12">12 Months Plan Rate (%)</label>
-          <input id="cfgRate12" type="number" step="0.01" value="7.20">
+          <input id="cfgRate12" type="number" step="0.01" value="6.20">
         </div>
         <div>
           <label for="cfgRate13">13 Months Plan Rate (%)</label>
-          <input id="cfgRate13" type="number" step="0.01" value="8.50">
+          <input id="cfgRate13" type="number" step="0.01" value="7.00">
         </div>
       </div>
     </div>
@@ -759,7 +759,7 @@ body:not(.light-theme) .zahid-title {
       <div class="grid">
         <div>
           <label for="cfgDpsRate">Annual Interest Rate (%)</label>
-          <input id="cfgDpsRate" type="number" step="0.01" value="9.50">
+          <input id="cfgDpsRate" type="number" step="0.01" value="8.50">
         </div>
       </div>
     </div>
@@ -774,8 +774,8 @@ body:not(.light-theme) .zahid-title {
   <div class="box-brand">
     <h1 id="mainTitle">Fixed Deposit Receipt (FDR) Calculator</h1>
     
-    <p>Calculates Gross Interest, Tax Deductions, Net Interest, and Maturity Value. Tax and Interest Rates reflect current Effective Rates as of Last Version Update Dated August 16, 2026. (For Changes in Rates, Update at - Rates Manager). Please note that EXCISE DUTY deductions are NOT INCLUDED.</p>
-    <div class="version-tag">V 4.5.12 DATED 16 AUG 2026</div>
+    <p>Calculates Gross Interest, Tax Deductions, Net Interest, and Maturity Value. Tax and Interest Rates reflect current Effective Rates as of Last Version Update Dated October 01, 2026. (For Changes in Rates, Update at - Rates Manager). Please note that EXCISE DUTY deductions are NOT INCLUDED.</p>
+    <div class="version-tag">V 4.6.12 DATED 01 OCT 2026</div>
   </div>
 
   <!-- ==================== TAB 1: FDR CALCULATOR ==================== -->
@@ -800,10 +800,10 @@ body:not(.light-theme) .zahid-title {
       <div style="margin-top:16px">
         <label>Fixed Deposit Plan</label>
         <div class="plan-grid" id="fdrPlans">
-          <div class="plan active" data-months="3" data-rate="7.00"><strong>3 Months</strong><span id="lblRate3">7.00% p.a.</span></div>
-          <div class="plan" data-months="6" data-rate="7.10"><strong>6 Months</strong><span id="lblRate6">7.10% p.a.</span></div>
-          <div class="plan" data-months="12" data-rate="7.20"><strong>12 Months</strong><span id="lblRate12">7.20% p.a.</span></div>
-          <div class="plan" data-months="13" data-rate="8.50"><strong>13 Months</strong><span id="lblRate13">8.50% p.a.</span></div>
+          <div class="plan active" data-months="3" data-rate="6.00"><strong>3 Months</strong><span id="lblRate3">6.00% p.a.</span></div>
+          <div class="plan" data-months="6" data-rate="6.10"><strong>6 Months</strong><span id="lblRate6">6.10% p.a.</span></div>
+          <div class="plan" data-months="12" data-rate="6.20"><strong>12 Months</strong><span id="lblRate12">6.20% p.a.</span></div>
+          <div class="plan" data-months="13" data-rate="7.00"><strong>13 Months</strong><span id="lblRate13">7.00% p.a.</span></div>
         </div>
       </div>
 
@@ -966,7 +966,7 @@ body:not(.light-theme) .zahid-title {
       <div class="grid">
         <div>
           <label for="dpsRate">Interest Rate (% p.a.)</label>
-          <input type="number" id="dpsRate" value="9.50" step="0.01" min="0">
+          <input type="number" id="dpsRate" value="8.50" step="0.01" min="0">
         </div>
 
         <div>
@@ -1038,15 +1038,15 @@ body:not(.light-theme) .zahid-title {
 const DEFAULT_RATES = {
   taxNo: 15.0,
   taxYes: 10.0,
-  plan3: 7.00,
-  plan6: 7.10,
-  plan12: 7.20,
-  plan13: 8.50,
-  dpsRate: 9.50
+  plan3: 6.00,
+  plan6: 6.10,
+  plan12: 6.20,
+  plan13: 7.00,
+  dpsRate: 8.50
 };
 
 let currentRates = { ...DEFAULT_RATES };
-let selectedFdrPlan = { months: 3, rate: 7.00 };
+let selectedFdrPlan = { months: 3, rate: 6.00 };
 let selectedDpsTenure = 5;
 
 // Helper function: Converts total months into clean "X Y Z M" format
@@ -1147,7 +1147,7 @@ function applyRatesToUI() {
   const fdrPlans = document.querySelectorAll('#fdrPlans .plan');
   fdrPlans.forEach(p => {
     const m = Number(p.dataset.months);
-    let rate = 7.00;
+    let rate = 6.00;
     if (m === 3) rate = currentRates.plan3;
     else if (m === 6) rate = currentRates.plan6;
     else if (m === 12) rate = currentRates.plan12;
